@@ -225,6 +225,7 @@ exports.createNodesForContentType = ({
   entries,
   createNode,
   createNodeId,
+  createContentDigest,
   getNode,
   resolvable,
   foreignReferenceMap,
@@ -518,10 +519,23 @@ exports.createNodesForContentType = ({
                 )
               })
 
-            entryItemFields[entryItemFieldKey] = {
-              raw: stringify(fieldValue),
+            const richTextNodeId = createNodeId(
+              `${entryNodeId}.${entryItemFieldKey}.richText`
+            )
+
+            const raw = stringify(fieldValue)
+            const richTextNode = {
+              id: richTextNodeId,
+              raw,
               references___NODE: [...resolvableReferenceIds],
+              internal: {
+                type: `ContentfulNodeTypeRichText`,
+                contentDigest: createContentDigest(raw),
+              },
             }
+            childrenNodes.push(richTextNode)
+            delete entryItemFields[entryItemFieldKey]
+            entryItemFields[`${entryItemFieldKey}___NODE`] = richTextNodeId
           } else if (
             fieldType === `Object` &&
             _.isPlainObject(entryItemFields[entryItemFieldKey])
