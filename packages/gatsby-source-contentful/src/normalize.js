@@ -425,7 +425,7 @@ exports.createNodesForContentType = ({
           // parent___NODE: entryNodeId,
           type: entryItem.sys.type,
           internal: {
-            type: `ContentfulSys`,
+            type: `ContentfulInternalSys`,
             contentDigest: entryItem.sys.updatedAt,
           },
         }
